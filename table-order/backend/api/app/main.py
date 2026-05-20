@@ -21,7 +21,7 @@ from app.infrastructure.middleware.error_handler import (
 from app.infrastructure.middleware.request_logger import RequestLoggerMiddleware
 from app.infrastructure.middleware.trace_id import TraceIDMiddleware
 from app.infrastructure.models import Base
-from app.infrastructure.routers import health_router, menu_router, order_router, sse_router
+from app.infrastructure.routers import health_router, menu_router, order_router, sse_router, table_login_router
 
 import logging
 
@@ -119,6 +119,7 @@ def create_app() -> FastAPI:
     app.include_router(menu_router.router)
     app.include_router(order_router.router)
     app.include_router(sse_router.router)
+    app.include_router(table_login_router.router)
 
     return app
 
