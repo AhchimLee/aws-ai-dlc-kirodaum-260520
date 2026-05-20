@@ -22,7 +22,12 @@ URL: http://localhost:3000/admin/login
 | `sushi` | `admin` | `admin123` |
 | `morning` | `admin` | `admin123` |
 
-## API Swagger
+## EKS 배포 (운영)
+
+- Ingress: http://k8s-tableorder-317d78d3a5-1890160864.us-east-1.elb.amazonaws.com
+- LB 직접: http://k8s-tableord-frontend-73cd2f57eb-6a28b2768bd70c66.elb.us-east-1.amazonaws.com
+
+## API Swagger (로컬)
 
 | 서비스 | URL |
 |--------|-----|
