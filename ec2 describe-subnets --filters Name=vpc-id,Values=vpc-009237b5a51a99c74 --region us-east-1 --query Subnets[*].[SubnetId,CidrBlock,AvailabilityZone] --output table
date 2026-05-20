@@ -1,0 +1,6 @@
+subnet-0cef2a2ad5dd7accd	10.0.21.0/24	us-east-1a	table-order-private-db-1
+subnet-03018fde169664ee6	10.0.22.0/24	us-east-1b	table-order-private-db-2
+subnet-047b9d9f5158881db	10.0.1.0/24	us-east-1a	table-order-public-1
+subnet-06a21ecb6befdf002	10.0.2.0/24	us-east-1b	table-order-public-2
+subnet-0d870aa5053a72bb6	10.0.12.0/24	us-east-1b	table-order-private-eks-2
+subnet-0cccc44fa189544cb	10.0.11.0/24	us-east-1a	table-order-private-eks-1

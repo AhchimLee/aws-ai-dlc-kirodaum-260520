@@ -1,0 +1,101 @@
+=== Creating EKS Cluster Role ===
+{
+    "Role": {
+        "Path": "/",
+        "RoleName": "table-order-eks-cluster-role",
+        "RoleId": "AROAVQXPOH5XM5XRGNLVO",
+        "Arn": "arn:aws:iam::379533016942:role/table-order-eks-cluster-role",
+        "CreateDate": "2026-05-20T05:51:28+00:00",
+        "AssumeRolePolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Principal": {
+                        "Service": "eks.amazonaws.com"
+                    },
+                    "Action": "sts:AssumeRole"
+                }
+            ]
+        }
+    }
+}
+Cluster Role ARN: arn:aws:iam::379533016942:role/table-order-eks-cluster-role
+
+=== Creating EKS 1.35 Cluster with Auto-mode + API access ===
+{
+    "cluster": {
+        "name": "table-order-cluster",
+        "arn": "arn:aws:eks:us-east-1:379533016942:cluster/table-order-cluster",
+        "createdAt": "2026-05-20T14:51:43.904000+09:00",
+        "version": "1.35",
+        "roleArn": "arn:aws:iam::379533016942:role/table-order-eks-cluster-role",
+        "resourcesVpcConfig": {
+            "subnetIds": [
+                "subnet-0cccc44fa189544cb",
+                "subnet-0d870aa5053a72bb6",
+                "subnet-047b9d9f5158881db",
+                "subnet-06a21ecb6befdf002"
+            ],
+            "securityGroupIds": [
+                "sg-0b7084931e28c9aa5"
+            ],
+            "vpcId": "vpc-009237b5a51a99c74",
+            "endpointPublicAccess": true,
+            "endpointPrivateAccess": true,
+            "publicAccessCidrs": [
+                "0.0.0.0/0"
+            ]
+        },
+        "kubernetesNetworkConfig": {
+            "serviceIpv4Cidr": "172.20.0.0/16",
+            "ipFamily": "ipv4",
+            "elasticLoadBalancing": {
+                "enabled": true
+            }
+        },
+        "logging": {
+            "clusterLogging": [
+                {
+                    "types": [
+                        "api",
+                        "audit",
+                        "authenticator",
+                        "controllerManager",
+                        "scheduler"
+                    ],
+                    "enabled": false
+                }
+            ]
+        },
+        "status": "CREATING",
+        "certificateAuthority": {},
+        "platformVersion": "eks.13",
+        "tags": {},
+        "accessConfig": {
+            "bootstrapClusterCreatorAdminPermissions": true,
+            "authenticationMode": "API"
+        },
+        "upgradePolicy": {
+            "supportType": "EXTENDED"
+        },
+        "computeConfig": {
+            "enabled": true,
+            "nodePools": [
+                "general-purpose"
+            ],
+            "nodeRoleArn": "arn:aws:iam::379533016942:role/table-order-eks-cluster-role"
+        },
+        "storageConfig": {
+            "blockStorage": {
+                "enabled": true
+            }
+        },
+        "deletionProtection": false,
+        "controlPlaneScalingConfig": {
+            "tier": "standard"
+        }
+    }
+}
+
+=== Waiting for cluster to become ACTIVE ===

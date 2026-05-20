@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: amazon-cloudwatch
+  labels:
+    name: amazon-cloudwatch
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloudwatch-config
+  namespace: amazon-cloudwatch
+data:
+  cwagentconfig.json: |
+    {
+      "logs": {
+        "metrics_collected": {
+          "kubernetes": {
+            "cluster_name": "table-order-cluster",
+            "metrics_collection_interval": 60
+          }
+        },
+        "force_flush_interval": 5
+      },
+      "metrics": {
+        "metrics_collected": {
+          "kubernetes": {
+            "enhanced_container_insights": true
+          }
+        }
+      }
+    }
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cloudwatch-agent
+  namespace: amazon-cloudwatch
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::ACCOUNT_ID:role/table-order-cloudwatch-agent
+  labels:
+    app.kubernetes.io/name: cloudwatch-agent
+    app.kubernetes.io/part-of: table-order

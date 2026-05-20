@@ -1,0 +1,16 @@
+=== Deleting existing EKS cluster ===
+2026-05-20 14:47:25 [ℹ]  deleting EKS cluster "table-order-cluster"
+2026-05-20 14:47:26 [ℹ]  deleted 0 Fargate profile(s)
+2026-05-20 14:47:27 [✔]  kubeconfig has been updated
+2026-05-20 14:47:27 [ℹ]  cleaning up AWS load balancers created by Kubernetes objects of Kind Service or Ingress
+2026-05-20 14:47:30 [ℹ]  1 task: { delete cluster control plane "table-order-cluster" }
+2026-05-20 14:47:30 [ℹ]  will delete stack "eksctl-table-order-cluster-cluster"
+2026-05-20 14:47:30 [ℹ]  waiting for stack "eksctl-table-order-cluster-cluster" to get deleted
+2026-05-20 14:47:30 [ℹ]  waiting for CloudFormation stack "eksctl-table-order-cluster-cluster"
+2026-05-20 14:48:04 [ℹ]  waiting for CloudFormation stack "eksctl-table-order-cluster-cluster"
+2026-05-20 14:48:48 [ℹ]  waiting for CloudFormation stack "eksctl-table-order-cluster-cluster"
+2026-05-20 14:48:48 [✔]  all cluster resources were deleted
+=== Old cluster deleted ===
+
+=== Creating EKS 1.35 with Auto-mode + EKS API access ===
+Error: loading config file "/tmp/eks-config.yaml": error unmarshaling JSON: while decoding JSON: json: unknown field "accessConfig"

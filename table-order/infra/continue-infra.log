@@ -1,0 +1,58 @@
+=== Allocating EIP ===
+EIP: eipalloc-020216e95f3bf4471
+=== Creating NAT Gateway ===
+NAT GW: nat-0b42e474836a144e5 — waiting for available...
+NAT GW ready!
+=== Creating Route Tables ===
+Public RT: rtb-0758fd3d49ac5e93f
+Private RT (EKS): rtb-074a8805da095828f
+DB RT (isolated): rtb-00df54a84a8c1d030
+=== Creating Security Groups ===
+ALB SG: sg-059fdd70dd450aa3f
+EKS SG: sg-0b7084931e28c9aa5
+RDS SG: sg-0293997b2a700a819
+
+=========================================
+VPC networking complete!
+=========================================
+VPC_ID=vpc-009237b5a51a99c74
+NAT_GW=nat-0b42e474836a144e5
+ALB_SG=sg-059fdd70dd450aa3f
+EKS_SG=sg-0b7084931e28c9aa5
+RDS_SG=sg-0293997b2a700a819
+PUB_RT=rtb-0758fd3d49ac5e93f
+PRIV_RT=rtb-074a8805da095828f
+DB_RT=rtb-00df54a84a8c1d030
+=========================================
+
+=== Creating EKS Cluster ===
+2026-05-20 14:25:41 [ℹ]  eksctl version 0.164.0
+2026-05-20 14:25:41 [ℹ]  using region us-east-1
+2026-05-20 14:25:44 [✔]  using existing VPC (vpc-009237b5a51a99c74) and subnets (private:map[us-east-1a:{subnet-0cccc44fa189544cb us-east-1a 10.0.11.0/24 0 } us-east-1b:{subnet-0d870aa5053a72bb6 us-east-1b 10.0.12.0/24 0 }] public:map[us-east-1a:{subnet-047b9d9f5158881db us-east-1a 10.0.1.0/24 0 } us-east-1b:{subnet-06a21ecb6befdf002 us-east-1b 10.0.2.0/24 0 }])
+2026-05-20 14:25:44 [!]  custom VPC/subnets will be used; if resulting cluster doesn't function as expected, make sure to review the configuration of VPC/subnets
+2026-05-20 14:25:44 [ℹ]  nodegroup "ng-3be3a77b" will use "" [AmazonLinux2/1.28]
+2026-05-20 14:25:44 [ℹ]  using Kubernetes version 1.28
+2026-05-20 14:25:44 [ℹ]  creating EKS cluster "table-order-cluster" in "us-east-1" region with managed nodes
+2026-05-20 14:25:44 [ℹ]  will create 2 separate CloudFormation stacks for cluster itself and the initial managed nodegroup
+2026-05-20 14:25:44 [ℹ]  if you encounter any issues, check CloudFormation console or try 'eksctl utils describe-stacks --region=us-east-1 --cluster=table-order-cluster'
+2026-05-20 14:25:44 [ℹ]  Kubernetes API endpoint access will use default of {publicAccess=true, privateAccess=false} for cluster "table-order-cluster" in "us-east-1"
+2026-05-20 14:25:44 [ℹ]  CloudWatch logging will not be enabled for cluster "table-order-cluster" in "us-east-1"
+2026-05-20 14:25:44 [ℹ]  you can enable it with 'eksctl utils update-cluster-logging --enable-types={SPECIFY-YOUR-LOG-TYPES-HERE (e.g. all)} --region=us-east-1 --cluster=table-order-cluster'
+2026-05-20 14:25:44 [ℹ]  
+2 sequential tasks: { create cluster control plane "table-order-cluster", 
+    2 sequential sub-tasks: { 
+        4 sequential sub-tasks: { 
+            wait for control plane to become ready,
+            associate IAM OIDC provider,
+            2 sequential sub-tasks: { 
+                create IAM role for serviceaccount "kube-system/aws-node",
+                create serviceaccount "kube-system/aws-node",
+            },
+            restart daemonset "kube-system/aws-node",
+        },
+        create managed nodegroup "ng-3be3a77b",
+    } 
+}
+2026-05-20 14:25:44 [ℹ]  building cluster stack "eksctl-table-order-cluster-cluster"
+2026-05-20 14:25:46 [ℹ]  deploying stack "eksctl-table-order-cluster-cluster"
+2026-05-20 14:26:18 [ℹ]  waiting for CloudFormation stack "eksctl-table-order-cluster-cluster"

@@ -1,0 +1,6 @@
+aws_region          = "ap-northeast-2"
+project_name        = "table-order"
+environment         = "prod"
+db_username         = "tableorder"
+db_password         = "CHANGE_ME_STRONG_PASSWORD"
+eks_cluster_version = "1.30"

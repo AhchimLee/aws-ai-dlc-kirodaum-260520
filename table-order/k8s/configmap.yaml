@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: table-order-config
+  namespace: table-order
+data:
+  LOG_LEVEL: "INFO"
+  APP_PORT_API: "8081"
+  APP_PORT_ADMIN: "8082"

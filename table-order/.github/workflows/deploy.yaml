@@ -1,0 +1,121 @@
+name: Build and Deploy to EKS
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'table-order/**'
+  workflow_dispatch:
+
+env:
+  AWS_REGION: ap-northeast-2
+  EKS_CLUSTER: table-order-cluster
+  ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-northeast-2.amazonaws.com
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service:
+          - name: order-service
+            path: table-order/backend/api
+            port: 8081
+          - name: admin-service
+            path: table-order/backend/admin
+            port: 8082
+          - name: frontend
+            path: table-order/frontend
+            port: 80
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push
+        id: build
+        run: |
+          IMAGE=${{ env.ECR_REGISTRY }}/table-order/${{ matrix.service.name }}:${{ github.sha }}
+          docker build -t $IMAGE ${{ matrix.service.path }}
+          docker push $IMAGE
+          echo "image=$IMAGE" >> $GITHUB_OUTPUT
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Update kubeconfig
+        run: aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER }} --region ${{ env.AWS_REGION }}
+
+      - name: Deploy to EKS
+        run: |
+          # Update image tags
+          cd table-order/k8s
+          sed -i "s|IMAGE_TAG|${{ env.ECR_REGISTRY }}/table-order/order-service:${{ github.sha }}|g" order-service/deployment.yaml
+          sed -i "s|IMAGE_TAG|${{ env.ECR_REGISTRY }}/table-order/admin-service:${{ github.sha }}|g" admin-service/deployment.yaml
+          sed -i "s|IMAGE_TAG|${{ env.ECR_REGISTRY }}/table-order/frontend:${{ github.sha }}|g" frontend/deployment.yaml
+
+          # Apply manifests
+          kubectl apply -f namespace.yaml
+          kubectl apply -f configmap.yaml
+          kubectl apply -f external-secret.yaml
+          kubectl apply -f karpenter-nodepool.yaml
+          kubectl apply -f order-service/
+          kubectl apply -f admin-service/
+          kubectl apply -f frontend/
+          kubectl apply -f ingress.yaml
+          kubectl apply -f observability/
+
+          # Wait for rollout
+          kubectl rollout status deployment/order-service -n table-order --timeout=300s
+          kubectl rollout status deployment/admin-service -n table-order --timeout=300s
+          kubectl rollout status deployment/frontend -n table-order --timeout=300s
+
+  smoke-test:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Get ALB URL
+        run: |
+          aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER }} --region ${{ env.AWS_REGION }}
+          ALB_URL=$(kubectl get ingress table-order-ingress -n table-order -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+          echo "ALB_URL=$ALB_URL" >> $GITHUB_ENV
+
+      - name: Health check
+        run: |
+          # Wait for ALB to be ready
+          sleep 30
+
+          # Order Service
+          curl -sf http://$ALB_URL/api/v1/healthz || exit 1
+          curl -sf http://$ALB_URL/api/v1/readyz || exit 1
+
+          # Admin Service
+          curl -sf http://$ALB_URL/admin/api/v1/healthz || exit 1
+          curl -sf http://$ALB_URL/admin/api/v1/readyz || exit 1
+
+          # Frontend
+          curl -sf http://$ALB_URL/ || exit 1
+
+          echo "All health checks passed!"

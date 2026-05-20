@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: table-order-config
+  namespace: table-order
+  labels:
+    app.kubernetes.io/part-of: table-order
+data:
+  LOG_LEVEL: "INFO"
+  APP_PORT_API: "8081"
+  APP_PORT_ADMIN: "8082"
+  CORS_ORIGINS: "*"
+  DB_POOL_SIZE: "10"
+  DB_MAX_OVERFLOW: "20"
