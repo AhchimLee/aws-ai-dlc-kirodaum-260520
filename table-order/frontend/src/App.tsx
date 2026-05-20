@@ -1,36 +1,38 @@
-import { Routes, Route, Link } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { MenuPage } from './pages/MenuPage';
+import { CartPage } from './pages/CartPage';
+import { OrdersPage } from './pages/OrdersPage';
+import { SetupPage } from './pages/SetupPage';
+import { AdminLogin } from './pages/AdminLogin';
+import { AdminDashboard } from './pages/AdminDashboard';
+import { AdminMenus } from './pages/AdminMenus';
+import { AdminSessions } from './pages/AdminSessions';
+import { storage } from './storage';
 
-function HomePage() {
-  return (
-    <div style={{ padding: '20px', fontFamily: 'sans-serif' }}>
-      <h1>🍽️ Table Order</h1>
-      <p>테이블 주문 시스템에 오신 것을 환영합니다.</p>
-      <nav>
-        <ul>
-          <li><Link to="/menu">메뉴 보기</Link></li>
-          <li><Link to="/admin/login">관리자 로그인</Link></li>
-        </ul>
-      </nav>
-    </div>
-  )
+function RequireConfig({ children }: { children: React.ReactNode }) {
+  const config = storage.getConfig();
+  if (!config) return <Navigate to="/setup" replace />;
+  return <>{children}</>;
 }
 
-function MenuPage() {
-  return <div style={{ padding: '20px' }}><h1>📋 메뉴</h1><p>메뉴 목록이 여기에 표시됩니다.</p></div>
+function RequireAdmin({ children }: { children: React.ReactNode }) {
+  const admin = storage.getAdmin();
+  if (!admin) return <Navigate to="/admin/login" replace />;
+  return <>{children}</>;
 }
 
-function AdminLogin() {
-  return <div style={{ padding: '20px' }}><h1>🔐 관리자 로그인</h1><p>로그인 폼</p></div>
-}
-
-function App() {
+export default function App() {
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/menu" element={<MenuPage />} />
+      <Route path="/setup" element={<SetupPage />} />
+      <Route path="/menu" element={<RequireConfig><MenuPage /></RequireConfig>} />
+      <Route path="/cart" element={<RequireConfig><CartPage /></RequireConfig>} />
+      <Route path="/orders" element={<RequireConfig><OrdersPage /></RequireConfig>} />
       <Route path="/admin/login" element={<AdminLogin />} />
+      <Route path="/admin/dashboard" element={<RequireAdmin><AdminDashboard /></RequireAdmin>} />
+      <Route path="/admin/menus" element={<RequireAdmin><AdminMenus /></RequireAdmin>} />
+      <Route path="/admin/sessions" element={<RequireAdmin><AdminSessions /></RequireAdmin>} />
+      <Route path="*" element={<Navigate to="/setup" replace />} />
     </Routes>
-  )
+  );
 }
-
-export default App
