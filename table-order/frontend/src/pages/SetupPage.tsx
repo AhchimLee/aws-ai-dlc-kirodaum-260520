@@ -16,34 +16,28 @@ export function SetupPage() {
   };
 
   return (
-    <div style={{ padding: 20, maxWidth: 400, margin: '0 auto', fontFamily: 'sans-serif' }}>
-      <h1>🍽️ 테이블 설정</h1>
-      <p>매장 ID와 테이블 ID를 입력하세요.</p>
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: 12 }}>
-          <label>매장 ID (Store UUID)</label>
-          <input
-            value={storeId}
-            onChange={e => setStoreId(e.target.value)}
-            placeholder="store uuid"
-            style={{ width: '100%', padding: 10, fontSize: 14, marginTop: 4 }}
-          />
+    <div className="page page-narrow" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', minHeight: '80vh' }}>
+      <div style={{ textAlign: 'center', marginBottom: 32 }}>
+        <div style={{ fontSize: 48, marginBottom: 8 }}>🍽️</div>
+        <h1 style={{ fontSize: 24, fontWeight: 700 }}>Table Order</h1>
+        <p style={{ color: 'var(--color-gray-500)', marginTop: 4 }}>테이블 주문 시스템</p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="card" style={{ padding: 24 }}>
+        <div style={{ marginBottom: 16 }}>
+          <label style={{ fontSize: 13, fontWeight: 500, color: 'var(--color-gray-600)', display: 'block', marginBottom: 4 }}>매장 ID</label>
+          <input value={storeId} onChange={e => setStoreId(e.target.value)} placeholder="Store UUID" required />
         </div>
-        <div style={{ marginBottom: 12 }}>
-          <label>테이블 ID (Table UUID)</label>
-          <input
-            value={tableId}
-            onChange={e => setTableId(e.target.value)}
-            placeholder="table uuid"
-            style={{ width: '100%', padding: 10, fontSize: 14, marginTop: 4 }}
-          />
+        <div style={{ marginBottom: 20 }}>
+          <label style={{ fontSize: 13, fontWeight: 500, color: 'var(--color-gray-600)', display: 'block', marginBottom: 4 }}>테이블 ID</label>
+          <input value={tableId} onChange={e => setTableId(e.target.value)} placeholder="Table UUID" required />
         </div>
-        <button type="submit" style={{ width: '100%', padding: 12, fontSize: 16, background: '#2563eb', color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer' }}>
-          설정 완료 → 메뉴 보기
+        <button type="submit" className="btn-primary btn-full" style={{ fontSize: 16 }}>
+          메뉴 보기 →
         </button>
       </form>
-      <hr style={{ margin: '24px 0' }} />
-      <button onClick={() => nav('/admin/login')} style={{ width: '100%', padding: 12, fontSize: 14, background: '#6b7280', color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer' }}>
+
+      <button onClick={() => nav('/admin/login')} className="btn-ghost btn-full" style={{ marginTop: 12 }}>
         관리자 로그인
       </button>
     </div>
